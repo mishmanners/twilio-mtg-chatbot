@@ -1,6 +1,6 @@
 # Magic: The Gathering Chatbot with Twilio Conversation Relay + OpenAI
 
-A voice-powered Magic: The Gathering assistant that you can call to get information about MTG mechanics, rules, strategies, and more using Twilio's Conversation Relay powered by OpenAI's intelligent responses.
+A voice-powered Magic: The Gathering assistant that you can call to get information about MTG mechanics, rules, strategies, and more using [Twilio Voice](https://www.twilio.com/docs/voice), [Twilio's Conversation Relay](https://www.twilio.com/docs/voice/twiml/connect/conversationrelay) and by [OpenAI's intelligent responses](https://platform.openai.com/docs/api-reference/introduction).
 
 ## Features
 
@@ -26,8 +26,8 @@ With OpenAI integration, you can ask about virtually anything Magic-related:
 ## Prerequisites
 
 - Python 3.8 or higher
-- A Twilio account with a phone number
-- An OpenAI API account with API key
+- A Twilio account with a phone number ([read the instructions for purchasing a number number](https://support.twilio.com/hc/en-us/articles/223180928-How-to-Buy-a-Twilio-Phone-Number)), and you can [sign up for a free trial](https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account)
+- An [OpenAI API account with API key](https://platform.openai.com/api-keys)
 - ngrok (for local development) or a public server
 
 ## Quick Setup
@@ -39,36 +39,26 @@ With OpenAI integration, you can ask about virtually anything Magic-related:
    python setup.py
    ```
 
-2. **Configure credentials**:
-   Edit `.env` file with your Twilio Account SID, Auth Token, and OpenAI API Key
+2. Install the required dependencies: `pip  install  -r  requirements.txt`
 
-3. **Start the servers**:
+3. **Configure credentials**:
+   Edit `.env` file with your Twilio Account SID, Auth Token, OpenAI API Key, and NGROK URL
+
+4. **Start the servers**:
    ```bash
-   python run_servers.py
+   ngrok  http  8080
    ```
 
-4. **Expose your local server** (for development):
-   ```bash
-   ngrok http 8000
-   ```
+5. Update `NGROK_URL` in your `.env` file with new URL from ngrok
 
-5. **Configure your Twilio phone number**:
+6. Run the application: `python  main.py`
+
+7. **Configure your Twilio phone number to use twiml endpoint as webhook for incoming calls**:
    Set the webhook URL to: `https://your-ngrok-url.ngrok.io/voice`
 
-## Detailed Setup
+8. Call number to interact
 
-### 1. Get API Keys
-
-1. **Twilio**: Sign up for a [Twilio account](https://www.twilio.com/try-twilio)
-2. Go to the [Twilio Console](https://console.twilio.com/)
-3. Find your Account SID and Auth Token on the dashboard
-4. Buy a phone number in the Phone Numbers section
-
-5. **OpenAI**: Sign up for an [OpenAI account](https://platform.openai.com/signup)
-6. Go to [API Keys](https://platform.openai.com/api-keys)
-7. Create a new API key and copy it
-
-### 2. Configure Twilio Features
+### Configuring the Twilio Features
 
 1. In the Twilio Console, navigate to Voice → Settings → General
 2. Enable "Predictive and Generative AI/ML Features Addendum"
@@ -76,25 +66,7 @@ With OpenAI integration, you can ask about virtually anything Magic-related:
 4. Create a new TwiML App or select an existing one
 5. Set the Voice URL to your server endpoint (see step 4)
 
-### 3. Environment Setup
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Copy environment template
-cp .env.example .env
-
-# Edit .env with your credentials
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=your_auth_token_here
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxx
-HTTP_PORT=8000
-WEBSOCKET_PORT=8001
-HOST=localhost  # Change to your domain for production
-```
-
-### 4. Local Development with ngrok
+### Local Development with ngrok
 
 For local testing, you need to expose your server to the internet:
 
@@ -106,7 +78,7 @@ ngrok http 8000
 
 This will give you a URL like `https://abc123.ngrok.io` - use this as your webhook URL.
 
-### 5. Configure Twilio Webhook
+### Configure Twilio Webhook
 
 1. In your TwiML App settings, set the Voice URL to:
    ```
@@ -116,54 +88,6 @@ This will give you a URL like `https://abc123.ngrok.io` - use this as your webho
 2. Set the Voice Method to `POST`
 
 3. Assign this TwiML App to your Twilio phone number
-
-## Running the Application
-
-### Development Mode
-
-```bash
-# Test the OpenAI integration first
-python test_knowledge.py
-
-# Then run both servers
-python run_servers.py
-
-# Or run individually:
-# Terminal 1:
-python main.py
-
-# Terminal 2:
-python websocket_server.py
-```
-
-### Production Deployment
-
-For production, deploy to a cloud service like:
-
-- **Heroku**: Use the included `Procfile`
-- **AWS**: Deploy on EC2 or use Elastic Beanstalk
-- **Google Cloud**: Use App Engine or Compute Engine
-- **DigitalOcean**: Deploy on a Droplet
-
-Update your `.env` file with your production domain:
-```
-HOST=your-domain.com
-```
-
-## Project Structure
-
-```
-twilio-mtg-chatbot/
-├── main.py                 # HTTP server for TwiML
-├── websocket_server.py     # WebSocket server for ConversationRelay
-├── mtg_knowledge.py        # MTG knowledge base
-├── run_servers.py          # Script to run both servers
-├── setup.py               # Setup and configuration script
-├── requirements.txt       # Python dependencies
-├── .env.example          # Environment template
-├── .env                  # Your configuration (create from .env.example)
-└── README.md             # This file
-```
 
 ## How It Works
 
@@ -175,11 +99,11 @@ twilio-mtg-chatbot/
 6. **Response Generation**: Server sends the OpenAI response back via WebSocket
 7. **Text-to-Speech**: Twilio converts text to speech and plays it to the caller
 
-## Customization
+## Customisation
 
 ### Adding More MTG Intelligence
 
-The OpenAI integration gives you access to vast MTG knowledge automatically! But you can customize the system prompt in `mtg_knowledge.py` to:
+The OpenAI integration gives you access to vast MTG knowledge automatically. However, you can customise the system prompt in `mtg_knowledge.py` to:
 - Focus on specific MTG areas
 - Adjust response length and style
 - Add custom instructions or personality
@@ -187,28 +111,15 @@ The OpenAI integration gives you access to vast MTG knowledge automatically! But
 
 ### Modifying Voice Settings
 
-In `main.py`, you can customize the ConversationRelay settings:
+In `main.py`, you can customise the ConversationRelay settings:
 ```python
 <ConversationRelay 
     url="{websocket_url}" 
     welcomeGreeting="Your custom greeting here!"
-    voice="alice"  # or "man", "woman", etc.
+    voice="alice"  # or "man", "woman", you can see a list of voices on the [Twilio Docs](https://www.twilio.com/docs/voice/conversationrelay/voice-configuration)
     dtmfDetection="true"
     debug="true" />
 ```
-
-### Adding Menu Navigation
-
-The WebSocket server supports DTMF (keypad) input. Customize the `handle_dtmf` method in `websocket_server.py`.
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Invalid signature" errors**: Check your Auth Token in `.env`
-2. **WebSocket connection failed**: Ensure your server is publicly accessible
-3. **TwiML not loading**: Verify your webhook URL is correct and server is running
-4. **Poor voice quality**: Check your internet connection and server performance
 
 ### Debugging
 
