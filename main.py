@@ -1,7 +1,7 @@
 import os
 import json
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Form
 from fastapi.responses import Response
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -34,18 +34,18 @@ async def ai_response(messages):
     )
     return completion.choices[0].message.content
 
-@app.post("/twiml")
+
 # You can choose the voice from ElevenLabs here: https://www.twilio.com/docs/voice/conversationrelay/voice-configuration
-async def twiml_endpoint():
-    """Endpoint that returns TwiML for Twilio to connect to the WebSocket"""
-    xml_response = f"""<?xml version="1.0" encoding="UTF-8"?>
-    <Response>
-      <Connect>
-        <ConversationRelay url="{WS_URL}" welcomeGreeting="{WELCOME_GREETING}" ttsProvider="ElevenLabs" voice="EkK5I93UQWFDigLMpZcX" />
-      </Connect>
-    </Response>"""
-    
-    return Response(content=xml_response, media_type="text/xml")
+@app.post("/twiml")
+async def twiml_endpoint(CallSid: str = Form(None)):
+        """Endpoint that returns TwiML for Twilio to connect to the WebSocket. Accepts form data from Twilio."""
+        xml_response = f"""<?xml version="1.0" encoding="UTF-8"?>
+        <Response>
+            <Connect>
+                <ConversationRelay url=\"{WS_URL}\" welcomeGreeting=\"{WELCOME_GREETING}\" ttsProvider=\"ElevenLabs\" voice=\"EkK5I93UQWFDigLMpZcX\" />
+            </Connect>
+        </Response>"""
+        return Response(content=xml_response, media_type="text/xml")
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

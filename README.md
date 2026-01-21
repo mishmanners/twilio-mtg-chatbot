@@ -49,7 +49,7 @@ With OpenAI integration, you can ask about virtually anything Magic-related:
    ngrok  http  8080
    ```
 
-5. Update `NGROK_URL` in your `.env` file with new URL from ngrok
+5. Update `NGROK_URL` in your `.env` file with new URL from ngrok, without the `https://`
 
 6. Run the application: `python  main.py`
 
@@ -64,7 +64,7 @@ With OpenAI integration, you can ask about virtually anything Magic-related:
 2. Enable "Predictive and Generative AI/ML Features Addendum"
 3. Go to Voice → Manage → TwiML Apps
 4. Create a new TwiML App or select an existing one
-5. Set the Voice URL to your server endpoint (see step 4)
+5. Set the Voice URL to your server endpoint (see step 7)
 
 ### Local Development with ngrok
 
