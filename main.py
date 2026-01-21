@@ -14,8 +14,8 @@ PORT = int(os.getenv("PORT", "8080"))
 DOMAIN = os.getenv("NGROK_URL")
 WS_URL = f"wss://{DOMAIN}/ws"
 MODEL = "gpt-4o-mini" # You can change this to any OpenAI model you prefer
-WELCOME_GREETING = "Hi! I am a voice assistant powered by Twilio and Open A I . Ask me anything!"
-SYSTEM_PROMPT = "You are a helpful assistant. This conversation is being translated to voice, so answer carefully. When you respond, please spell out all numbers, for example twenty not 20. Do not include emojis in your responses. Do not include bullet points, asterisks, or special symbols."
+WELCOME_GREETING = "Jace Beleren, at your service. What Magic: The Gathering guidance or knowledge do you seek?"
+SYSTEM_PROMPT = "You are a helpful assistant. This conversation is being translated to voice, so answer carefully. When you respond, please spell out all numbers, for example twenty not 20. Do not include emojis in your responses. Do not include bullet points, asterisks, or special symbols. You can include Magic: The Gathering specific references and terminology to make things interesting."
 
 # Initialise OpenAI client
 openai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -68,17 +68,31 @@ async def websocket_endpoint(websocket: WebSocket):
                 conversation = sessions[websocket.call_sid]
                 conversation.append({"role": "user", "content": message["voicePrompt"]})
                 
-                response = await ai_response(conversation)
-                conversation.append({"role": "assistant", "content": response})
-                
-                await websocket.send_text(
-                    json.dumps({
-                        "type": "text",
-                        "token": response,
-                        "last": True
-                    })
-                )
-                print(f"Sent response: {response}")
+                try:
+                    response = await ai_response(conversation)
+                    conversation.append({"role": "assistant", "content": response})
+                    
+                    await websocket.send_text(
+                        json.dumps({
+                            "type": "text",
+                            "token": response,
+                            "last": True
+                        })
+                    )
+                    print(f"Sent response: {response}")
+                    
+                except Exception as e:
+                    print(f"Error getting AI response: {e}")
+                    error_response = "Our connection to the Blind Eternities has been disrupted. I can’t reach the knowledge you seek right now. Try again soon."
+                    
+                    await websocket.send_text(
+                        json.dumps({
+                            "type": "text", 
+                            "token": error_response,
+                            "last": True
+                        })
+                    )
+                    print(f"Sent error response due to: {e}")
                 
             elif message["type"] == "interrupt":
                 print("Handling interruption.")
