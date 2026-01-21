@@ -35,12 +35,13 @@ async def ai_response(messages):
     return completion.choices[0].message.content
 
 @app.post("/twiml")
+# You can choose the voice from ElevenLabs here: https://www.twilio.com/docs/voice/conversationrelay/voice-configuration
 async def twiml_endpoint():
     """Endpoint that returns TwiML for Twilio to connect to the WebSocket"""
     xml_response = f"""<?xml version="1.0" encoding="UTF-8"?>
     <Response>
       <Connect>
-        <ConversationRelay url="{WS_URL}" welcomeGreeting="{WELCOME_GREETING}" ttsProvider="ElevenLabs" voice="FGY2WhTYpPnrIDTdsKH5" />
+        <ConversationRelay url="{WS_URL}" welcomeGreeting="{WELCOME_GREETING}" ttsProvider="ElevenLabs" voice="EkK5I93UQWFDigLMpZcX" />
       </Connect>
     </Response>"""
     
