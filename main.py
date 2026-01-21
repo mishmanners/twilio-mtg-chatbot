@@ -17,7 +17,7 @@ MODEL = "gpt-4o-mini" # You can change this to any OpenAI model you prefer
 WELCOME_GREETING = "Hi! I am a voice assistant powered by Twilio and Open A I . Ask me anything!"
 SYSTEM_PROMPT = "You are a helpful assistant. This conversation is being translated to voice, so answer carefully. When you respond, please spell out all numbers, for example twenty not 20. Do not include emojis in your responses. Do not include bullet points, asterisks, or special symbols."
 
-# Initialize OpenAI client
+# Initialise OpenAI client
 openai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Store active sessions

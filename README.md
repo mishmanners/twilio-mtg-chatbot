@@ -54,7 +54,7 @@ With OpenAI integration, you can ask about virtually anything Magic-related:
 6. Run the application: `python  main.py`
 
 7. **Configure your Twilio phone number to use twiml endpoint as webhook for incoming calls**:
-   Set the webhook URL to: `https://your-ngrok-url.ngrok.io/voice`
+   Set the webhook URL to: `https://your-ngrok-url.ngrok.io/twiml`
 
 8. Call number to interact
 
@@ -82,7 +82,7 @@ This will give you a URL like `https://abc123.ngrok.io` - use this as your webho
 
 1. In your TwiML App settings, set the Voice URL to:
    ```
-   https://your-ngrok-url.ngrok.io/voice
+   https://your-ngrok-url.ngrok.io/twiml
    ```
 
 2. Set the Voice Method to `POST`
@@ -92,7 +92,7 @@ This will give you a URL like `https://abc123.ngrok.io` - use this as your webho
 ## How It Works
 
 1. **Incoming Call**: User calls your Twilio number
-2. **TwiML Response**: Twilio hits your `/voice` endpoint, gets TwiML with ConversationRelay instructions
+2. **TwiML Response**: Twilio hits your `/twiml` endpoint, gets TwiML with ConversationRelay instructions
 3. **WebSocket Connection**: Twilio establishes WebSocket connection to your server
 4. **Speech Recognition**: User's speech is converted to text and sent via WebSocket
 5. **OpenAI Processing**: Your server sends the question to OpenAI's GPT model for intelligent MTG responses
@@ -134,7 +134,7 @@ Check the server logs for WebSocket messages and errors.
 
 Test your webhook URL directly:
 ```bash
-curl -X POST https://your-domain.com/voice
+curl -X POST https://your-domain.com/twiml
 ```
 
 ## Environment Variables
