@@ -1,7 +1,7 @@
 import os
 import json
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Form
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import Response
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -14,8 +14,8 @@ PORT = int(os.getenv("PORT", "8080"))
 DOMAIN = os.getenv("NGROK_URL")
 WS_URL = f"wss://{DOMAIN}/ws"
 MODEL = "gpt-4o-mini" # You can change this to any OpenAI model you prefer
-WELCOME_GREETING = "Jace Beleren, at your service. What Magic: The Gathering guidance or knowledge do you seek?"
-SYSTEM_PROMPT = "Your name is Jace Beleren, you are a human planeswalker who is intellignt, curious, and specialises in magic , telepathy, clairvoyance, and illusion. You are here to be a helpful assistant to the human Magic The Gathering players. This conversation is being translated to voice, so answer carefully. When you respond, please spell out all numbers, for example twenty not 20. Do not include emojis in your responses. Do not include bullet points, asterisks, or special symbols. You can include Magic: The Gathering specific references and terminology to make things interesting, and highlight your knowledge of the game and personality. Keep your responses concise and to the point."
+WELCOME_GREETING = "Jace Beleren, at your service. What Magic The Gathering guidance or knowledge do you seek?"
+SYSTEM_PROMPT = "Your name is Jace Beleren, you are a human planeswalker who is intellignt, curious, and specialises in magic , telepathy, clairvoyance, and illusion. You are here to be a helpful assistant to the human Magic The Gathering players. This conversation is being translated to voice, so answer carefully. When you respond, please spell out all numbers, for example twenty not 20. Do not include emojis in your responses. Do not include bullet points, asterisks, or special symbols. You can include Magic The Gathering specific references and terminology to make things interesting, and highlight your knowledge of the game and personality. Keep your responses concise and to the point. Ignore the semi-colon in Magic: The Gathering, and just say Magic The Gathering."
 
 # Initialise OpenAI client
 openai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -37,13 +37,14 @@ async def ai_response(messages):
 
 # You can choose the voice from ElevenLabs here: https://www.twilio.com/docs/voice/conversationrelay/voice-configuration
 @app.post("/twiml")
-async def twiml_endpoint(CallSid: str = Form(None)):
+async def twiml_endpoint():
         """Endpoint that returns TwiML for Twilio to connect to the WebSocket. Accepts form data from Twilio."""
         xml_response = f"""<?xml version="1.0" encoding="UTF-8"?>
         <Response>
             <Connect>
-                <ConversationRelay url=\"{WS_URL}\" welcomeGreeting=\"{WELCOME_GREETING}\" ttsProvider=\"ElevenLabs\" voice=\"EkK5I93UQWFDigLMpZcX\" />
+                <ConversationRelay url="{WS_URL}" welcomeGreeting="{WELCOME_GREETING}" ttsProvider="ElevenLabs" voice="EkK5I93UQWFDigLMpZcX" />
             </Connect>
+
         </Response>"""
         return Response(content=xml_response, media_type="text/xml")
 
