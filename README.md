@@ -176,3 +176,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 🎲 **May your draws be favorable and your mana curve smooth!** 🎲
+
+Big thanks to [Rishab for creating the original starter code for this](https://github.com/rishabkumar7/cr-demo-python/blob/main/README.md). Make sure you check out his repo too.
