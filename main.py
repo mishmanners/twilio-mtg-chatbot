@@ -51,7 +51,7 @@ async def twiml_endpoint(CallSid: str = Form(None)):
 @app.websocket("/ws") # This is where the magic happens, handling real-time communication
 async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time communication"""
-    await websocket.accept() : # Accept the WebSocket connection
+    await websocket.accept() # Accept the WebSocket connection
     call_sid = None
     
     try:
