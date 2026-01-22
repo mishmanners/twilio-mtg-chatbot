@@ -42,14 +42,14 @@ With OpenAI integration, you can ask about virtually anything Magic-related:
 2. Install the required dependencies: `pip  install  -r  requirements.txt`
 
 3. **Configure credentials**:
-   Edit `.env` file with your Twilio Account SID, Auth Token, OpenAI API Key, and NGROK URL
+   Edit `.env` file with your Twilio Account SID, Auth Token, and OpenAI API Key.
 
 4. **Start the servers**:
    ```bash
    ngrok  http  8080
    ```
 
-5. Update `NGROK_URL` in your `.env` file with new URL from ngrok, without the `https://`
+5. Update `NGROK_URL` in the `main.py` file with new URL from ngrok, without the `https://`
 
 6. Run the application: `python  main.py`
 
@@ -76,13 +76,13 @@ For local testing, you need to expose your server to the internet:
 ngrok http 8000
 ```
 
-This will give you a URL like `https://abc123.ngrok.io` - use this as your webhook URL.
+This will give you a URL like `https://abc123.ngrok.app` - use this as your webhook URL.
 
 ### Configure Twilio Webhook
 
 1. In your TwiML App settings, set the Voice URL to:
    ```
-   https://your-ngrok-url.ngrok.io/twiml
+   https://your-ngrok-url.ngrok.app/twiml
    ```
 
 2. Set the Voice Method to `POST`

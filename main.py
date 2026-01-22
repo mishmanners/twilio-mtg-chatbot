@@ -11,7 +11,7 @@ load_dotenv()
 
 # Configuration
 PORT = int(os.getenv("PORT", "8080"))
-DOMAIN = os.getenv("NGROK_URL")
+DOMAIN = "your-ngrok-or-server-url-here"  # Replace with your actual URL
 WS_URL = f"wss://{DOMAIN}/ws"
 MODEL = "gpt-4o-mini" # You can change this to any OpenAI model you prefer
 WELCOME_GREETING = "Jace Beleren, at your service. What Magic The Gathering guidance or knowledge do you seek?"
