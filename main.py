@@ -26,6 +26,11 @@ sessions = {}
 # Create FastAPI app, this is where the interactions happen
 app = FastAPI()
 
+# Health check endpoint to verify the server is running
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "message": "MTG Chatbot Server Running"}
+
 # Favicon endpoint to prevent 404 errors in logs when Twilio tries to fetch it
 @app.get("/favicon.ico")
 async def favicon():
@@ -38,6 +43,7 @@ async def ai_response(messages):
         messages=messages
     )
     return completion.choices[0].message.content
+
 
 # You can choose the voice from ElevenLabs here: https://www.twilio.com/docs/voice/conversationrelay/voice-configuration
 @app.post("/twiml") # Twilio calls this endpoint to get TwiML instructions (XML) that tells Twilio to connect to the WebSocket
