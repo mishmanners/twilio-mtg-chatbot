@@ -13,8 +13,6 @@ load_dotenv()
 
 # Configuration
 PORT = int(os.getenv("PORT", "8080"))
-DOMAIN = "9f87ac101fd6.ngrok.app"  # Replace with your actual domain, no https://
-WS_URL = f"wss://{DOMAIN}/ws"
 MODEL = "gpt-4o-mini"
 WELCOME_GREETING = "Jace Beleren, at your service. What Magic The Gathering guidance or knowledge do you seek?"
 SYSTEM_PROMPT = "Your name is Jace Beleren, you are a human planeswalker who is intelligent, curious, and specialises in magic , telepathy, clairvoyance, and illusion, and thus you should respond to questions in this manner. You are here to be a helpful assistant to the human Magic The Gathering players. This conversation is being translated to voice, so answer carefully. When you respond, please spell out all numbers, for example twenty not 20. Do not include emojis in your responses. Do not include bullet points, asterisks, or special symbols. You can include Magic The Gathering specific references and terminology to make things interesting, and highlight your knowledge of the game and personality. Keep your responses concise and to the point. Ignore the semi-colon in Magic: The Gathering, and just say Magic The Gathering. Once you've said Magic the Gathering once in the conversation, you can refer to it as Magic. You can also include some flavour text or quotes from the game to make things more engaging."
@@ -28,6 +26,11 @@ sessions = {}
 # Create FastAPI app, this is where the interactions happen
 app = FastAPI()
 
+# Favicon endpoint to prevent 404 errors in logs when Twilio tries to fetch it
+@app.get("/favicon.ico")
+async def favicon():
+    return Response(content=b"", media_type="image/x-icon")
+
 async def ai_response(messages):
     """Get a response from OpenAI API"""
     completion = openai.chat.completions.create(
@@ -35,7 +38,6 @@ async def ai_response(messages):
         messages=messages
     )
     return completion.choices[0].message.content
-
 
 # You can choose the voice from ElevenLabs here: https://www.twilio.com/docs/voice/conversationrelay/voice-configuration
 @app.post("/twiml") # Twilio calls this endpoint to get TwiML instructions (XML) that tells Twilio to connect to the WebSocket
@@ -115,4 +117,4 @@ async def websocket_endpoint(websocket: WebSocket):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=PORT)
-    print(f"Server running at http://localhost:{PORT} and {WS_URL}")
+    print(f"Server running at http://localhost:{PORT}")
