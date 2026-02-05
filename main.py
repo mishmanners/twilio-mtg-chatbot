@@ -13,7 +13,7 @@ load_dotenv()
 
 # Configuration
 PORT = int(os.getenv("PORT", "8080"))
-DOMAIN = "a222b0333acd.ngrok.app"  # Replace with your actual domain, no https://
+DOMAIN = os.getenv("NGROK_URL") 
 WS_URL = f"wss://{DOMAIN}/ws"
 MODEL = "gpt-4o-mini"
 WELCOME_GREETING = "Jace Beleren, at your service. What Magic The Gathering guidance or knowledge do you seek?"
