@@ -5,13 +5,15 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Form
 from fastapi.responses import Response
 from openai import OpenAI
 from dotenv import load_dotenv
+from fastapi import Request
+import inspect
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Configuration
 PORT = int(os.getenv("PORT", "8080"))
-DOMAIN = "9f87ac101fd6.ngrok.app"  # Replace with your actual domain, no https://
+DOMAIN = "a222b0333acd.ngrok.app"  # Replace with your actual domain, no https://
 WS_URL = f"wss://{DOMAIN}/ws"
 MODEL = "gpt-4o-mini"
 WELCOME_GREETING = "Jace Beleren, at your service. What Magic The Gathering guidance or knowledge do you seek?"
@@ -37,12 +39,16 @@ async def ai_response(messages):
 
 # You can choose the voice from ElevenLabs here: https://www.twilio.com/docs/voice/conversationrelay/voice-configuration
 @app.post("/twiml") # Twilio calls this endpoint to get TwiML instructions (XML) that tells Twilio to connect to the WebSocket
-async def twiml_endpoint(CallSid: str = Form(None)):
+async def twiml_endpoint(request: Request):
+        
+        # parse Host header from the request to construct WS_URL dynamically
+        host = request.headers.get("host")
+
         """Endpoint that returns TwiML for Twilio to connect to the WebSocket. Accepts form data from Twilio."""
         xml_response = f"""<?xml version="1.0" encoding="UTF-8"?>
         <Response>
             <Connect>
-                <ConversationRelay url="{WS_URL}" welcomeGreeting="{WELCOME_GREETING}" ttsProvider="ElevenLabs" voice="EkK5I93UQWFDigLMpZcX" />
+                <ConversationRelay url="wss://{host}/ws" welcomeGreeting="{WELCOME_GREETING}" ttsProvider="ElevenLabs" voice="EkK5I93UQWFDigLMpZcX" />
             </Connect>
 
         </Response>"""
